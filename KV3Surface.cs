@@ -9,7 +9,9 @@ namespace KVSurfaceUpdater
 {
     internal class KV3Surface
     {
-		public string Name { get; }
+		public static string Prefix = "";
+
+		public string Name { get; set; }
 
 		public KVValue? Base;
 		public KVValue? density;
@@ -24,6 +26,7 @@ namespace KVSurfaceUpdater
 		public KVValue? Break;
 		public KVValue? scraperough;
 		public KVValue? scrapesmooth;
+		public KVValue? thickness;
 
 		public KVValue? gamematerial;
 		public KV3Decal? gamematerial_decal = null;
@@ -46,6 +49,7 @@ namespace KVSurfaceUpdater
 			gamematerial = sourceObject["gamematerial"];
 			scraperough = sourceObject["scraperough"];
 			scrapesmooth = sourceObject["scrapesmooth"];
+			thickness = sourceObject["thickness"];
 		}
 
         public override string ToString()
@@ -54,13 +58,13 @@ namespace KVSurfaceUpdater
 {{
 	data = 
 	{{
-		BaseSurface = ""{(Base == null ? "surfaces/default.surface" : $"surfaces/{(string)Base}.surface")}""
+		BaseSurface = ""{(Base == null ? "surfaces/default.surface" : $"surfaces/{Prefix + (string)Base}.surface")}""
 		AudioMaterial = null
 		Description = ""{Name}""
 		Friction = {FloatOrDefault(friction)}
 		Elasticity = {FloatOrDefault(elasticity)}
 		Density = {FloatOrDefault(density)}
-		Thickness = 2.36
+		Thickness = {FloatOrDefault(thickness)}
 		Dampening = {FloatOrDefault(dampening)}
 		BounceThreshold = 50
 		ImpactEffects = 

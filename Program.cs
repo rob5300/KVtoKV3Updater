@@ -21,6 +21,13 @@ while(string.IsNullOrEmpty(targetFolder))
     }
 }
 
+Console.WriteLine("Input prefix for converted surfaces (leave empty for no prefix):");
+KV3Surface.Prefix = Console.ReadLine();
+if(KV3Surface.Prefix != "")
+{
+    Console.WriteLine($"Will use prefix '{KV3Surface.Prefix}'.");
+}
+
 var serialiser = KVSerializer.Create(KVSerializationFormat.KeyValues1Text);
 KVObject decals_subrect;
 Dictionary<string, string> translationData= new Dictionary<string, string>();
@@ -58,7 +65,7 @@ if (Directory.Exists(targetFolder))
 {
     Stopwatch stopwatch = new Stopwatch();
     stopwatch.Start();
-    outputFolder = Path.Combine(Path.GetDirectoryName(targetFolder), "data", "surface");
+    outputFolder = Path.Combine(targetFolder, "data", "surface");
     if (!Directory.Exists(outputFolder))
     {
         Directory.CreateDirectory(outputFolder);
@@ -114,9 +121,10 @@ void ProcessSurfacesFile(string filePath, string outputFolder)
         
         foreach(var surfaceObject in surfaceObjects)
         {
-            string surfaceName = surfaceObject.Name;
+            string surfaceName = KV3Surface.Prefix + surfaceObject.Name;
             string surfaceFile = Path.Combine(outputFolder, $"{surfaceName.ToLower()}.surface");
             KV3Surface newSurface = new KV3Surface(surfaceObject);
+            newSurface.Name = KV3Surface.Prefix + newSurface.Name;
             KVValue? gamematerial = newSurface.gamematerial;
             if (gamematerial != null)
             {
