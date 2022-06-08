@@ -58,7 +58,7 @@ namespace KVSurfaceUpdater
 {{
 	data = 
 	{{
-		BaseSurface = ""{(Base == null ? "surfaces/default.surface" : $"surfaces/{Prefix + (string)Base}.surface")}""
+		BaseSurface = ""{(Base == null ? "data/surface/default.surface" : $"data/surface/{Prefix + (string)Base}.surface")}""
 		AudioMaterial = null
 		Description = ""{Name}""
 		Friction = {FloatOrDefault(friction)}
