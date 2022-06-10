@@ -50,7 +50,14 @@ try
             }
             else
             {
-                translationData.Add(child.Name, (string)child.Value);
+                if(!translationData.ContainsKey(child.Name))
+                {
+                    translationData.Add(child.Name, (string)child.Value);
+                }
+                else
+                {
+                    Console.WriteLine($"! Duplicate translation key '{child.Name}' with value '{(string)child.Value}' will be ignored ({child.Name} will instead translate to '{translationData[child.Name]}').");
+                }
             }
         }
     }
@@ -186,18 +193,18 @@ void ExitFromError(Exception e, string attemptedPath = null)
 {
     if(!string.IsNullOrEmpty(attemptedPath))
     {
-        Console.WriteLine($"Unable to open '{Path.GetFileName(attemptedPath)}'. Program will now exit.");
+        Console.WriteLine($"! Unable to open '{Path.GetFileName(attemptedPath)}'. Program will now exit.");
     }
     else
     {
-        Console.WriteLine("Critical error occurred. Program will now exit.");
+        Console.WriteLine("!!! Critical error occurred. Program will now exit.");
     }
     
     if(!string.IsNullOrEmpty(attemptedPath))
     {
         Console.WriteLine($"Attempted path: '{decalsSubrectPath}'");
     }
-    Console.WriteLine($"ERROR: {e.GetType().Name}, {e.Message}.");
+    Console.WriteLine($"!!! ERROR: {e.GetType().Name}, {e.Message}.");
     Console.WriteLine("Error Stack:\n" + e.StackTrace);
     Environment.Exit(1);
 }
