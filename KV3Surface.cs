@@ -7,12 +7,8 @@ using ValveKeyValue;
 
 namespace KVSurfaceUpdater
 {
-    internal class KV3Surface
-    {
-		public static string Prefix = "";
-
-		public string Name { get; set; }
-
+    internal class KV3Surface : KV3Object
+	{
 		public KVValue? Base;
 		public KVValue? density;
 		public KVValue? elasticity;
@@ -31,7 +27,11 @@ namespace KVSurfaceUpdater
 		public KVValue? gamematerial;
 		public KV3Decal? gamematerial_decal = null;
 
-		public KV3Surface(KVObject sourceObject)
+        public KV3Surface(KVObject sourceObject) : base(sourceObject)
+        {
+        }
+
+        protected override void SetupWithKVObject(KVObject sourceObject)
         {
 			Name = sourceObject.Name;
             
@@ -103,14 +103,6 @@ namespace KVSurfaceUpdater
 }}";
         }
 
-		private static float FloatOrDefault(KVValue? value)
-        {
-			return value == null ? 0f : (float)value;
-        }
-
-		private static string StringOrDefault(KVValue? value)
-        {
-			return value == null ? "" : (string)value;
-		}
+		
     }
 }

@@ -3,12 +3,15 @@ using ValveKeyValue;
 
 namespace KVSurfaceUpdater
 {
-    internal class KV3Decal
+    internal class KV3Decal : KV3Object
     {
-        public string Name { get; }
-        public List<string> decals { get; }
+        public List<string> decals { get; private set; }
 
-        public KV3Decal(KVObject sourceObject)
+        public KV3Decal(KVObject sourceObject) : base(sourceObject)
+        {
+        }
+
+        protected override void SetupWithKVObject(KVObject sourceObject)
         {
             Name = sourceObject.Name;
             decals = sourceObject.Children.Select(x => x.Name).ToList();
