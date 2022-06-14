@@ -20,7 +20,14 @@ namespace KVSurfaceUpdater
                 string filename = Path.GetFileName(file);
                 if (ShouldConvertFile(filename))
                 {
-                    ProcessFile(file, outputFolder);
+                    try
+                    {
+                        ProcessFile(file, outputFolder);
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine($"Error processing file '{file}': {e.Message}");
+                    }
                 }
             }
         }
@@ -34,8 +41,18 @@ namespace KVSurfaceUpdater
 
         protected KVObject OpenKVFile(string filepath)
         {
-            using (var stream = File.Open(filepath, FileMode.Open))
+            string fileText = File.ReadAllText(filepath);
+
+            //Remove conditionals as this parser just breaks on them?
+            fileText = Regex.Replace(fileText, @"\[\$.*\]", "");
+
+            //Write back to stream for parser
+            using (var stream = new MemoryStream())
             {
+                var writer = new StreamWriter(stream);
+                writer.Write(fileText);
+                writer.Flush();
+                stream.Position = 0;
                 KVSerializer serializer = KVSerializer.Create(KVSerializationFormat.KeyValues1Text);
                 return serializer.Deserialize(stream);
             }

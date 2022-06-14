@@ -23,6 +23,19 @@ namespace KVSurfaceUpdater
             
         }
 
+        protected static float TryParseFloatOrDefault(KVValue? value)
+        {
+            if(value != null)
+            {
+                if (float.TryParse((string)value, out float val))
+                {
+                    return val;
+                }
+            }
+
+            return 0f;
+        }
+
         protected static float FloatOrDefault(KVValue? value)
         {
             return value == null ? 0f : (float)value;

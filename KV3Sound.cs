@@ -67,9 +67,9 @@ namespace KVSurfaceUpdater
 	data = 
 	{{
 		UI = false
-		Volume = {FloatOrDefault(volume)}
+		Volume = {TryParseFloatOrDefault(volume)}
 		VolumeRandom = 0
-		Pitch = {FloatOrDefault(pitch)}
+		Pitch = {TryParseFloatOrDefault(pitch)}
 		PitchRandom = 0
 		Decibels = 70
 		Sounds = {ArrayOrNull(sounds)}
