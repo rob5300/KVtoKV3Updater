@@ -6,9 +6,8 @@ using ValveKeyValue;
 Console.WriteLine("KV Updater by rob5300");
 
 Converter? converter = null;
-var currentAssembly = Assembly.GetCallingAssembly();
 var type = typeof(Converter);
-var converterTypes = currentAssembly.GetTypes().Where(x => !x.IsAbstract && x.IsSubclassOf(type)).ToList();
+var converterTypes = type.Assembly.GetTypes().Where(x => !x.IsAbstract && x.IsSubclassOf(type)).ToList();
 
 string allConverters = string.Join(", ", converterTypes.Select(x => $"{converterTypes.IndexOf(x)}: {x.Name.Replace("Converter", "")}"));
 
@@ -63,7 +62,7 @@ if (Directory.Exists(targetFolder))
     Stopwatch stopwatch = new Stopwatch();
     stopwatch.Start();
 
-    converter.Convert(targetFolder);
+    await converter.ConvertAsync(targetFolder);
 
     stopwatch.Stop();
     Console.WriteLine($"Done! Took {stopwatch.Elapsed}.");

@@ -12,24 +12,29 @@ namespace KVSurfaceUpdater
     {
         public Converter() { }
 
-        public virtual void Convert(string targetPath)
+        public async virtual Task ConvertAsync(string targetPath)
         {
             string outputFolder = Path.Combine(targetPath, "data");
-            foreach (var file in Directory.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories))
+            var filesToProcess = Directory.EnumerateFiles(targetPath, "*", SearchOption.AllDirectories).Where(x => ShouldConvertFile(Path.GetFileName(x)));
+
+            List<Task> convertTasks = new List<Task>(filesToProcess.Count());
+            foreach (var file in filesToProcess)
             {
-                string filename = Path.GetFileName(file);
-                if (ShouldConvertFile(filename))
+                string taskFile = file;
+                convertTasks.Add(Task.Run(async () =>
                 {
                     try
                     {
-                        ProcessFile(file, outputFolder);
+                        await ProcessFile(taskFile, outputFolder);
                     }
                     catch(Exception e)
                     {
-                        Console.WriteLine($"Error processing file '{file}': {e.Message}");
+                        Console.WriteLine($"Error processing file '{taskFile}': {e.Message}");
                     }
-                }
+                }));
             }
+            
+            await Task.WhenAll(convertTasks.ToArray());
         }
         
         protected virtual bool ShouldConvertFile(string filename)
@@ -37,7 +42,7 @@ namespace KVSurfaceUpdater
             return true;
         }
 
-        protected abstract bool ProcessFile(string filePath, string outputFolder);
+        protected abstract Task<bool> ProcessFile(string filePath, string outputFolder);
 
         protected KVObject OpenKVFile(string filepath)
         {

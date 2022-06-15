@@ -14,10 +14,10 @@ namespace KVSurfaceUpdater
         List<KVObject> decals = new List<KVObject>();
         Dictionary<string, KV3Decal> newDecals = new Dictionary<string, KV3Decal>();
 
-        public override void Convert(string targetPath)
+        public override async Task ConvertAsync(string targetPath)
         {
             LoadDecalsSubrect(targetPath);
-
+            
             string outputFolder = Path.Combine(targetPath, "surface");
             if (!Directory.Exists(outputFolder))
             {
@@ -35,7 +35,7 @@ namespace KVSurfaceUpdater
             var createdDecals = CreateDecalFiles(decals, decalOutPath);
             newDecals = createdDecals.ToDictionary(x => x.Name);
 
-            base.Convert(targetPath);
+            await base.ConvertAsync(targetPath);
         }
 
         protected override bool ShouldConvertFile(string filename)
@@ -85,7 +85,7 @@ namespace KVSurfaceUpdater
             }
         }
 
-        protected override bool ProcessFile(string filePath, string outputFolder)
+        protected override async Task<bool> ProcessFile(string filePath, string outputFolder)
         {
             try
             {
