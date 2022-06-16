@@ -46,10 +46,14 @@ namespace KVSurfaceUpdater
 
         protected KVObject OpenKVFile(string filepath)
         {
+            //Read file into text so we can fix the many parser 
             string fileText = File.ReadAllText(filepath);
 
             //Remove conditionals as this parser just breaks on them?
             fileText = Regex.Replace(fileText, @"\[\$.*\]", "");
+
+            //Fix broken , seperated parsing
+            fileText = Regex.Replace(fileText, @"(?<=""\d*),(?=\d*"")", ", ");
 
             //Write back to stream for parser
             using (var stream = new MemoryStream())

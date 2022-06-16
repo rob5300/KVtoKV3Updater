@@ -13,9 +13,13 @@ namespace KVSurfaceUpdater
         List<string> sounds = new List<string>();
         
         KVValue? channel;
-        KVValue? volume;
         KVValue? soundlevel;
-        KVValue? pitch;
+
+        float pitch = 1f;
+        float volume = 1f;
+        float randomVolume;
+        float randomPitch;
+
 
         public KV3Sound(KVObject sourceObject) : base(sourceObject)
         {
@@ -25,10 +29,47 @@ namespace KVSurfaceUpdater
         {
             Name = sourceObject.Name;
             channel = sourceObject["channel"];
-            volume = sourceObject["volume"];
             soundlevel = sourceObject["soundlevel"];
-            pitch = sourceObject["pitch"];
-            
+
+            var kvvolume = sourceObject["volume"];
+            var kvpitch = sourceObject["pitch"];
+
+            if(kvvolume != null)
+            {
+                string stringVolume = (string)kvvolume;
+                if(stringVolume.ToLower().Contains("norm"))
+                {
+                    volume = 1f;
+                }
+                else
+                {
+                    var volumeValues = GetFloatArray(stringVolume);
+                    volume = volumeValues[0];
+                    if (volumeValues.Length > 1)
+                    {
+                        randomVolume = volumeValues[1] - volume;
+                    }
+                }
+            }
+
+            if(kvpitch != null)
+            {
+                string stringPitch = (string)kvpitch;
+                if(stringPitch.ToLower().Contains("norm"))
+                {
+                    pitch = 1f;
+                }
+                else
+                {
+                    var pitchValues = GetFloatArray(stringPitch);
+                    pitch = pitchValues[0] / 100f;
+                    if (pitchValues.Length > 1)
+                    {
+                        randomPitch = (pitchValues[1] / 100f) - pitch;
+                    }
+                }
+            }
+
             var wave = sourceObject["wave"];
             var rndwave = sourceObject["rndwave"];
             if(wave != null)
@@ -57,7 +98,7 @@ namespace KVSurfaceUpdater
             wavePath = wavePath.Replace(")", "");
             wavePath = wavePath.Replace("(", "");
             wavePath = wavePath.Replace(Path.GetExtension(wavePath), ".vsnd");
-            return $"resource:\"sounds/{wavePath}\",";
+            return $"resource:\"sounds/{wavePath.Replace("\\", "/")}\",";
         }
 
         public override string ToString()
@@ -67,10 +108,10 @@ namespace KVSurfaceUpdater
 	data = 
 	{{
 		UI = false
-		Volume = {TryParseFloatOrDefault(volume)}
-		VolumeRandom = 0
-		Pitch = {TryParseFloatOrDefault(pitch)}
-		PitchRandom = 0
+		Volume = {volume}
+		VolumeRandom = {randomVolume}
+		Pitch = {pitch}
+		PitchRandom = {randomPitch}
 		Decibels = 70
 		Sounds = {ArrayOrNull(sounds)}
 		SelectionMode = 3

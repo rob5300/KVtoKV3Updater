@@ -46,6 +46,18 @@ namespace KVSurfaceUpdater
             return value == null ? "" : (string)value;
         }
 
+        protected static float[] GetFloatArray(string values)
+        {
+            var splitValues = values.Split(",");
+            float[] floats = new float[splitValues.Length];
+            for (int i = 0; i < splitValues.Length; i++)
+            {
+                floats[i] = float.Parse(splitValues[i]);
+            }
+            
+            return floats;
+        }
+
         protected static string ArrayOrNull(IEnumerable<string> input)
         {
             if(input == null || input.Count() == 0)
