@@ -161,13 +161,41 @@ namespace KVSurfaceUpdater
             }
         }
 
+        private static string[] SoundCharacters = new[]
+        {
+            // Full list available here:
+            // https://developer.valvesoftware.com/wiki/Soundscripts#Sound_Characters
+
+            "*", // CHAR_STREAM
+            "#", // CHAR_DRYMIX
+            "@", // CHAR_OMNI
+            ">", // CHAR_DOPPLER
+            "<", // CHAR_DIRECTIONAL
+            "^", // CHAR_DISTVARIANT
+            ")", // CHAR_SPATIALSTEREO
+            "}", // CHAR_FAST_PITCH
+            "$", // CHAR_CRITICAL 
+            "!", // CHAR_SENTENCE 
+            "?", // CHAR_USERVOX
+            "&", // CHAR_HRTF_FORCE 
+            "~", // CHAR_HRTF
+            "`", // CHAR_HRTF_BLEND 
+            "+", // CHAR_RADIO 
+            "(", // CHAR_DIRSTEREO 
+            "$", // CHAR_SUBTITLED 
+            "%", // CHAR_MUSIC 
+        };
+
         private static string ToSoundResource(KVValue wave)
         {
             string wavePath = (string)wave;
-            //Remove some chars, could do this better?
-            wavePath = wavePath.Replace("#", "");
-            wavePath = wavePath.Replace(")", "");
-            wavePath = wavePath.Replace("(", "");
+
+            // Remove Valve's Sound Characters
+            foreach(var soundChar in SoundCharacters)
+            {
+                wavePath = wavePath.Replace(soundChar, "");
+            }
+
             wavePath = wavePath.Replace(Path.GetExtension(wavePath), ".vsnd");
             return $"resource:\"sounds/{wavePath.Replace("\\", "/")}\",";
         }
