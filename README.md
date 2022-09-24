@@ -8,7 +8,7 @@ Most important data is converted for sounds. All sound characters are correctly 
 Looks in surfaceproperties files as well a decals_subrect file to make new surface files and decal files.
 Created for use with SBox.
 
-Special thanks to [justynboi](https://github.com/justynboi) for outlining how to translate:
+Special thanks to [justyn0](https://github.com/justyn0) for outlining how to translate:
 - Surfaces
 - Decals
 - Sounds
